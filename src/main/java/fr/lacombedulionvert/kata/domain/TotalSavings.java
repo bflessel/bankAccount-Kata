@@ -8,7 +8,10 @@ class TotalSavings {
 
     void add(Amount newAmount) {
         this.amount.add(newAmount);
-        HistoryLine historyLine = new HistoryLineBuilder().setDeposit(OperationType.DEPOSIT).setNewAmount(newAmount).createActualHistoryLine();
+        OperationType operationType = OperationType.DEPOSIT;
+        if (newAmount.isNegative())
+            operationType = OperationType.WITHDRAWAL;
+        HistoryLine historyLine = new HistoryLineBuilder().setDeposit(operationType).setNewAmount(newAmount).createActualHistoryLine();
         histories.add(historyLine);
     }
 

@@ -33,4 +33,8 @@ public class Amount {
     Amount negateAmount() {
         return new Amount(-amount);
     }
+
+    boolean isNegative() {
+        return amount < 0;
+    }
 }

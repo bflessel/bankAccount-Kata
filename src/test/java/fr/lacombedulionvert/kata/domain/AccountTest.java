@@ -75,5 +75,18 @@ public class AccountTest {
         Assertions.assertThat(historyLine).isEqualTo(realHistory);
     }
 
+    @Test
+    public void after_making_a_withdrawal_on_an_empty_account_should_give_the_history_of_the_deposit() {
+        Account account = new Account();
+        Amount newAmount = new Amount(100.0);
+        account.withdrawal(newAmount);
+        List<HistoryLine> lines = account.showHistoryLines();
+        LocalDate localDate = LocalDate.now();
+        HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
+        HistoryLine historyLine = new HistoryLineBuilder().setDate(date).setNewAmount(newAmount.negateAmount()).setDeposit(OperationType.WITHDRAWAL).createHistoryLine();
+        HistoryLine realHistory = lines.get(0);
+        Assertions.assertThat(historyLine).isEqualTo(realHistory);
+    }
+
 
 }

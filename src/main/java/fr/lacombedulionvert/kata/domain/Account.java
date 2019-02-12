@@ -1,18 +1,20 @@
 package fr.lacombedulionvert.kata.domain;
 
+import java.util.List;
+
 class Account {
-    private Amount amount;
+    private TotalSavings totalSavings;
 
     Account() {
-        this.amount = new Amount();
+        this.totalSavings = new TotalSavings();
     }
 
     void deposit(Amount newAmount) {
-        amount.add(newAmount);
+        totalSavings.add(newAmount);
     }
 
     Amount giveActualBalance() {
-        return amount;
+        return totalSavings.givezActualBalance();
     }
 
     void withdrawal(Amount amount) {
@@ -21,5 +23,9 @@ class Account {
 
     void printHistory(Printer printer) {
 
+    }
+
+    List<HistoryLine> showHistoryLines() {
+        return totalSavings.giveHistory();
     }
 }

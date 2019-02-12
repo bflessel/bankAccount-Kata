@@ -18,4 +18,8 @@ class Account {
     void withdrawal(Amount amount) {
         deposit(amount.negateAmount());
     }
+
+    void printHistory(Printer printer) {
+
+    }
 }

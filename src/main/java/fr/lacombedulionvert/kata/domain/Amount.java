@@ -29,4 +29,8 @@ public class Amount {
     public int hashCode() {
         return Objects.hash(amount);
     }
+
+    Amount negateAmount() {
+        return new Amount(-amount);
+    }
 }

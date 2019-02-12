@@ -14,4 +14,8 @@ class Account {
     Amount giveActualBalance() {
         return amount;
     }
+
+    void withdrawal(Amount amount) {
+        deposit(amount.negateAmount());
+    }
 }

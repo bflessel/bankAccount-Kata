@@ -1,11 +1,11 @@
-package fr.lacombedulionvert.kata.domain;
+package fr.lacombedulionvert.kata.domain.dateManagement;
 
 import java.util.Objects;
 
 public class Day {
-    private int dayOfMonth;
+    private final int dayOfMonth;
 
-    Day(int dayOfMonth) {
+    public Day(int dayOfMonth) {
         this.dayOfMonth = dayOfMonth;
     }
 
@@ -20,5 +20,10 @@ public class Day {
     @Override
     public int hashCode() {
         return Objects.hash(dayOfMonth);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(dayOfMonth);
     }
 }

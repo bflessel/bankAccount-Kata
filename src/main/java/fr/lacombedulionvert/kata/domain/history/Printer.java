@@ -1,4 +1,4 @@
-package fr.lacombedulionvert.kata.domain;
+package fr.lacombedulionvert.kata.domain.history;
 
 import java.util.List;
 

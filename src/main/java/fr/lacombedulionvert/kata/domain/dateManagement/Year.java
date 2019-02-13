@@ -1,11 +1,11 @@
-package fr.lacombedulionvert.kata.domain;
+package fr.lacombedulionvert.kata.domain.dateManagement;
 
 import java.util.Objects;
 
 public class Year {
-    private int year;
+    private final int year;
 
-    Year(int year) {
+    public Year(int year) {
         this.year = year;
     }
 
@@ -20,5 +20,10 @@ public class Year {
     @Override
     public int hashCode() {
         return Objects.hash(year);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(year);
     }
 }

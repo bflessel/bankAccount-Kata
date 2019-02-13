@@ -2,12 +2,17 @@ package fr.lacombedulionvert.kata.domain;
 
 import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
-import org.assertj.core.api.Assertions;
+import fr.lacombedulionvert.kata.domain.dateManagement.*;
+import fr.lacombedulionvert.kata.domain.history.HistoryLine;
+import fr.lacombedulionvert.kata.domain.history.HistoryLineBuilder;
+import fr.lacombedulionvert.kata.domain.history.OperationType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitQuickcheck.class)
 public class AccountTest {
@@ -17,7 +22,7 @@ public class AccountTest {
         Account account = new Account();
         account.deposit(new Amount(amount));
         Amount totalSavings = account.giveActualBalance();
-        Assertions.assertThat(new Amount(amount)).isEqualTo(totalSavings);
+        assertThat(new Amount(amount)).isEqualTo(totalSavings);
     }
 
     @Property
@@ -28,7 +33,7 @@ public class AccountTest {
         account.deposit(new Amount(thirdAmount));
         Amount totalSavings = account.giveActualBalance();
         Amount realAmount = new Amount(amount + otherAmount + thirdAmount);
-        Assertions.assertThat(realAmount).isEqualTo(totalSavings);
+        assertThat(realAmount).isEqualTo(totalSavings);
     }
 
     @Property
@@ -36,7 +41,7 @@ public class AccountTest {
         Account account = new Account();
         account.withdrawal(new Amount(amount));
         Amount totalSavings = account.giveActualBalance();
-        Assertions.assertThat(new Amount(-amount)).isEqualTo(totalSavings);
+        assertThat(new Amount(-amount)).isEqualTo(totalSavings);
     }
 
     @Property
@@ -47,7 +52,7 @@ public class AccountTest {
         account.withdrawal(new Amount(thirdAmount));
         Amount totalSavings = account.giveActualBalance();
         Amount realAmount = new Amount(-(amount + otherAmount + thirdAmount));
-        Assertions.assertThat(realAmount).isEqualTo(totalSavings);
+        assertThat(realAmount).isEqualTo(totalSavings);
     }
 
     @Property
@@ -58,35 +63,58 @@ public class AccountTest {
         account.deposit(new Amount(thirdAmount));
         Amount totalSavings = account.giveActualBalance();
         Amount realAmount = new Amount(amount - otherAmount + thirdAmount);
-        Assertions.assertThat(realAmount).isEqualTo(totalSavings);
+        assertThat(realAmount).isEqualTo(totalSavings);
     }
 
 
-    @Test
-    public void after_making_a_deposit_on_an_empty_account_should_give_the_history_of_the_deposit() {
+    @Property
+    public void after_making_a_deposit_on_an_empty_account_should_give_the_history_of_the_deposit(Double amount) {
         Account account = new Account();
-        Amount newAmount = new Amount(100.0);
+        Amount newAmount = new Amount(amount);
         account.deposit(newAmount);
         List<HistoryLine> lines = account.showHistoryLines();
         LocalDate localDate = LocalDate.now();
         HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
-        HistoryLine historyLine = new HistoryLineBuilder().setDate(date).setNewAmount(newAmount).setDeposit(OperationType.DEPOSIT).createHistoryLine();
+        HistoryLine historyLine = new HistoryLineBuilder()
+                .setDate(date)
+                .setNewAmount(newAmount)
+                .setOperationType(OperationType.DEPOSIT)
+                .createHistoryLine();
         HistoryLine realHistory = lines.get(0);
-        Assertions.assertThat(historyLine).isEqualTo(realHistory);
+        assertThat(historyLine).isEqualTo(realHistory);
     }
 
-    @Test
-    public void after_making_a_withdrawal_on_an_empty_account_should_give_the_history_of_the_deposit() {
+    @Property
+    public void after_making_a_withdrawal_on_an_empty_account_should_give_the_history_of_the_deposit(Double amount) {
         Account account = new Account();
-        Amount newAmount = new Amount(100.0);
+        Amount newAmount = new Amount(amount);
         account.withdrawal(newAmount);
         List<HistoryLine> lines = account.showHistoryLines();
         LocalDate localDate = LocalDate.now();
         HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
-        HistoryLine historyLine = new HistoryLineBuilder().setDate(date).setNewAmount(newAmount.negateAmount()).setDeposit(OperationType.WITHDRAWAL).createHistoryLine();
+        HistoryLine historyLine = new HistoryLineBuilder()
+                .setDate(date)
+                .setNewAmount(newAmount.negateAmount())
+                .setOperationType(OperationType.WITHDRAWAL)
+                .createHistoryLine();
         HistoryLine realHistory = lines.get(0);
-        Assertions.assertThat(historyLine).isEqualTo(realHistory);
+        assertThat(historyLine).isEqualTo(realHistory);
     }
 
+    @Test
+    public void given_a_deposit_should_print_a_line() {
+        Account account = new Account();
+        account.deposit(new Amount(300.0));
+        StringPrinter printer = new StringPrinter();
+        account.printHistory(printer);
+        String history = printer.showOutPut();
+        String expectedResumeOfOperations = createALineForADeposit();
+        assertThat(expectedResumeOfOperations).isEqualTo(history);
+    }
 
+    private String createALineForADeposit() {
+        LocalDate actualDate = LocalDate.now();
+        HistoryDate date = new HistoryDateBuilder().setDay(new Day(actualDate.getDayOfMonth())).setMonth(new Month(actualDate.getMonthValue())).setYear(new Year(actualDate.getYear())).createHistoryDate();
+        return "\t " + date.giveDate() + "\t **** DEPOSIT\t300.0\t\t **** 300.0\n";
+    }
 }

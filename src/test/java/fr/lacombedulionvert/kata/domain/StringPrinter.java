@@ -1,5 +1,7 @@
 package fr.lacombedulionvert.kata.domain;
 
+import fr.lacombedulionvert.kata.domain.history.Printer;
+
 import java.util.List;
 
 public class StringPrinter implements Printer {

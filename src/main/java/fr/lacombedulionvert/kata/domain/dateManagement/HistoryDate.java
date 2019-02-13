@@ -1,12 +1,13 @@
-package fr.lacombedulionvert.kata.domain;
+package fr.lacombedulionvert.kata.domain.dateManagement;
 
 import java.util.Objects;
 
 public class HistoryDate {
 
-    private Day day;
-    private Month month;
-    private Year year;
+    private static final String SEPARATOR = "/";
+    private final Day day;
+    private final Month month;
+    private final Year year;
 
     HistoryDate(Day day, Month month, Year year) {
         this.day = day;
@@ -29,12 +30,7 @@ public class HistoryDate {
         return Objects.hash(day, month, year);
     }
 
-    @Override
-    public String toString() {
-        return "HistoryDate{" +
-                "day=" + day +
-                ", month=" + month +
-                ", year=" + year +
-                '}';
+    public String giveDate() {
+        return day.toString() + SEPARATOR + month.toString() + SEPARATOR + year.toString();
     }
 }

@@ -37,4 +37,8 @@ public class Amount {
     boolean isNegative() {
         return amount < 0;
     }
+
+    public double getValue() {
+        return amount;
+    }
 }

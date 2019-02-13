@@ -1,9 +1,12 @@
 package fr.lacombedulionvert.kata.domain;
 
+import fr.lacombedulionvert.kata.domain.history.HistoryLine;
+import fr.lacombedulionvert.kata.domain.history.Printer;
+
 import java.util.List;
 
 class Account {
-    private TotalSavings totalSavings;
+    private final TotalSavings totalSavings;
 
     Account() {
         this.totalSavings = new TotalSavings();
@@ -14,7 +17,7 @@ class Account {
     }
 
     Amount giveActualBalance() {
-        return totalSavings.givezActualBalance();
+        return totalSavings.giveActualBalance();
     }
 
     void withdrawal(Amount amount) {
@@ -22,7 +25,7 @@ class Account {
     }
 
     void printHistory(Printer printer) {
-
+        printer.printHistory(totalSavings.listHistory());
     }
 
     List<HistoryLine> showHistoryLines() {

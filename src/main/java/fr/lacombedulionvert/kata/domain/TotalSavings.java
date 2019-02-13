@@ -1,5 +1,10 @@
 package fr.lacombedulionvert.kata.domain;
 
+import fr.lacombedulionvert.kata.domain.history.Histories;
+import fr.lacombedulionvert.kata.domain.history.HistoryLine;
+import fr.lacombedulionvert.kata.domain.history.HistoryLineBuilder;
+import fr.lacombedulionvert.kata.domain.history.OperationType;
+
 import java.util.List;
 
 class TotalSavings {
@@ -11,7 +16,10 @@ class TotalSavings {
         OperationType operationType = OperationType.DEPOSIT;
         if (newAmount.isNegative())
             operationType = OperationType.WITHDRAWAL;
-        HistoryLine historyLine = new HistoryLineBuilder().setDeposit(operationType).setNewAmount(newAmount).createActualHistoryLine();
+        HistoryLine historyLine = new HistoryLineBuilder()
+                .setOperationType(operationType)
+                .setNewAmount(newAmount)
+                .createActualHistoryLine();
         histories.add(historyLine);
     }
 
@@ -20,11 +28,16 @@ class TotalSavings {
         this.histories = new Histories();
     }
 
-    Amount givezActualBalance() {
+    Amount giveActualBalance() {
         return amount;
     }
 
     List<HistoryLine> giveHistory() {
         return histories.giveHistoryList();
+    }
+
+    public List<String> listHistory() {
+        return histories.showHistory();
+
     }
 }

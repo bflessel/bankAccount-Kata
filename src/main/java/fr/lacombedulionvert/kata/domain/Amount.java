@@ -41,4 +41,8 @@ public class Amount {
     public double getValue() {
         return amount;
     }
+
+    boolean isEqualZero() {
+        return amount == 0;
+    }
 }

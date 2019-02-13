@@ -7,7 +7,7 @@ import fr.lacombedulionvert.kata.domain.history.OperationType;
 
 import java.util.List;
 
-class TotalSavings {
+class History {
     private Amount amount;
     private Histories histories;
 
@@ -16,6 +16,8 @@ class TotalSavings {
         OperationType operationType = OperationType.DEPOSIT;
         if (newAmount.isNegative())
             operationType = OperationType.WITHDRAWAL;
+        if (newAmount.isEqualZero())
+            operationType = OperationType.NAN;
         HistoryLine historyLine = new HistoryLineBuilder()
                 .setOperationType(operationType)
                 .setNewAmount(newAmount)
@@ -23,7 +25,7 @@ class TotalSavings {
         histories.add(historyLine);
     }
 
-    TotalSavings() {
+    History() {
         this.amount = new Amount();
         this.histories = new Histories();
     }
@@ -36,7 +38,7 @@ class TotalSavings {
         return histories.giveHistoryList();
     }
 
-    public List<String> listHistory() {
+    List<String> listHistory() {
         return histories.showHistory();
 
     }

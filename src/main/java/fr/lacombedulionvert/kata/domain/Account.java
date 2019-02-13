@@ -6,29 +6,29 @@ import fr.lacombedulionvert.kata.domain.history.Printer;
 import java.util.List;
 
 class Account {
-    private final TotalSavings totalSavings;
+    private final History history;
 
     Account() {
-        this.totalSavings = new TotalSavings();
+        this.history = new History();
     }
 
-    void deposit(Amount newAmount) {
-        totalSavings.add(newAmount);
+    void makeDeposit(Amount newAmount) {
+        history.add(newAmount);
     }
 
     Amount giveActualBalance() {
-        return totalSavings.giveActualBalance();
+        return history.giveActualBalance();
     }
 
     void withdrawal(Amount amount) {
-        deposit(amount.negateAmount());
+        makeDeposit(amount.negateAmount());
     }
 
     void printHistory(Printer printer) {
-        printer.printHistory(totalSavings.listHistory());
+        printer.printHistory(history.listHistory());
     }
 
     List<HistoryLine> showHistoryLines() {
-        return totalSavings.giveHistory();
+        return history.giveHistory();
     }
 }

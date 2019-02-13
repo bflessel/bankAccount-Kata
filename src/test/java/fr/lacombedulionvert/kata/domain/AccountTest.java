@@ -20,7 +20,7 @@ public class AccountTest {
     @Property
     public void after_making_a_deposit_on_an_empty_account_should_give_the_amount_of_the_deposit(Double amount) {
         Account account = new Account();
-        account.deposit(new Amount(amount));
+        account.makeDeposit(new Amount(amount));
         Amount totalSavings = account.giveActualBalance();
         assertThat(new Amount(amount)).isEqualTo(totalSavings);
     }
@@ -28,9 +28,9 @@ public class AccountTest {
     @Property
     public void after_multiple_deposits_on_an_empty_should_give_the_amount_of_the_sum_of_the_deposits(Double amount, Double otherAmount, Double thirdAmount) {
         Account account = new Account();
-        account.deposit(new Amount(amount));
-        account.deposit(new Amount(otherAmount));
-        account.deposit(new Amount(thirdAmount));
+        account.makeDeposit(new Amount(amount));
+        account.makeDeposit(new Amount(otherAmount));
+        account.makeDeposit(new Amount(thirdAmount));
         Amount totalSavings = account.giveActualBalance();
         Amount realAmount = new Amount(amount + otherAmount + thirdAmount);
         assertThat(realAmount).isEqualTo(totalSavings);
@@ -58,9 +58,9 @@ public class AccountTest {
     @Property
     public void after_multiple_withdrawals_and_deposit_on_an_empty_should_give_the_amount_of_the_sum_of_all(Double amount, Double otherAmount, Double thirdAmount) {
         Account account = new Account();
-        account.deposit(new Amount(amount));
+        account.makeDeposit(new Amount(amount));
         account.withdrawal(new Amount(otherAmount));
-        account.deposit(new Amount(thirdAmount));
+        account.makeDeposit(new Amount(thirdAmount));
         Amount totalSavings = account.giveActualBalance();
         Amount realAmount = new Amount(amount - otherAmount + thirdAmount);
         assertThat(realAmount).isEqualTo(totalSavings);
@@ -71,7 +71,7 @@ public class AccountTest {
     public void after_making_a_deposit_on_an_empty_account_should_give_the_history_of_the_deposit(Double amount) {
         Account account = new Account();
         Amount newAmount = new Amount(amount);
-        account.deposit(newAmount);
+        account.makeDeposit(newAmount);
         List<HistoryLine> lines = account.showHistoryLines();
         LocalDate localDate = LocalDate.now();
         HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
@@ -104,7 +104,7 @@ public class AccountTest {
     @Test
     public void given_a_deposit_should_print_a_line() {
         Account account = new Account();
-        account.deposit(new Amount(300.0));
+        account.makeDeposit(new Amount(300.0));
         StringPrinter printer = new StringPrinter();
         account.printHistory(printer);
         String history = printer.showOutPut();

@@ -12,9 +12,9 @@ public class AcceptanceTest {
     @Test
     public void after_multiples_deposits_and_withdrawals_should_see_the_history_of_all_operation() {
         Account account = new Account();
-        account.deposit(new Amount(300.0));
+        account.makeDeposit(new Amount(300.0));
         account.withdrawal(new Amount(200.0));
-        account.deposit(new Amount(0.0));
+        account.makeDeposit(new Amount(0.0));
         StringPrinter printer = new StringPrinter();
         account.printHistory(printer);
         String history = printer.showOutPut();
@@ -27,7 +27,7 @@ public class AcceptanceTest {
         HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
         return "\t " + date.giveDate() + "\t **** DEPOSIT\t300.0\t\t **** 300.0\n"
                 + "\t " + date.giveDate() + "\t **** WITHDRAWAL\t-200.0\t\t **** 100.0\n"
-                + "\t " + date.giveDate() + "\t **** DEPOSIT\t0.0\t\t **** 100.0\n";
+                + "\t " + date.giveDate() + "\t **** NAN\t0.0\t\t **** 100.0\n";
     }
 
 }

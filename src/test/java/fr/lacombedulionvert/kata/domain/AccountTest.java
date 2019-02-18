@@ -1,6 +1,7 @@
 package fr.lacombedulionvert.kata.domain;
 
 import com.pholser.junit.quickcheck.Property;
+import com.pholser.junit.quickcheck.generator.InRange;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
 import fr.lacombedulionvert.kata.domain.dateManagement.*;
 import fr.lacombedulionvert.kata.domain.history.HistoryLine;
@@ -21,7 +22,7 @@ public class AccountTest {
     public void after_making_a_deposit_on_an_empty_account_should_give_the_amount_of_the_deposit(Double amount) {
         Account account = new Account();
         account.makeDeposit(new Amount(amount));
-        Amount totalSavings = account.giveActualBalance();
+        Amount totalSavings = account.giveBalance();
         assertThat(new Amount(amount)).isEqualTo(totalSavings);
     }
 
@@ -31,38 +32,67 @@ public class AccountTest {
         account.makeDeposit(new Amount(amount));
         account.makeDeposit(new Amount(otherAmount));
         account.makeDeposit(new Amount(thirdAmount));
-        Amount totalSavings = account.giveActualBalance();
+        Amount totalSavings = account.giveBalance();
         Amount realAmount = new Amount(amount + otherAmount + thirdAmount);
         assertThat(realAmount).isEqualTo(totalSavings);
     }
 
     @Property
-    public void after_making_a_withdrawal_on_empty_account_should_give_the_amount_of_the_deposit(Double amount) {
+    public void after_making_a_withdrawal_on_account_with_10000_should_return_the_sub_of_10000(@InRange(minDouble = 0.1, maxDouble = 9999) double amount) {
         Account account = new Account();
-        account.withdrawal(new Amount(amount));
-        Amount totalSavings = account.giveActualBalance();
-        assertThat(new Amount(-amount)).isEqualTo(totalSavings);
+        account.makeDeposit(new Amount(10000.0));
+        account.makeWithdrawal(new Amount(amount));
+        Amount totalSavings = account.giveBalance();
+        assertThat(new Amount(10000.0 - amount)).isEqualTo(totalSavings);
+    }
+
+
+    @Property
+    public void after_making_a_withdrawal_on_empty_account_should_throw_an_exception(@InRange(minDouble = 0.1) double amount) {
+        Account account = new Account();
+        UnsupportedOperationException exception = null;
+        try {
+            account.makeWithdrawal(new Amount(amount));
+        } catch (UnsupportedOperationException e) {
+            exception = e;
+        }
+        assertThat(exception).isNotEqualTo(null);
     }
 
     @Property
-    public void after_multiple_withdrawals_on_an_empty_should_give_the_amount_of_the_substraction_of_the_withdrawals(Double amount, Double otherAmount, Double thirdAmount) {
+    public void after_an_amount_of_0_should_throw_an_exception() {
         Account account = new Account();
-        account.withdrawal(new Amount(amount));
-        account.withdrawal(new Amount(otherAmount));
-        account.withdrawal(new Amount(thirdAmount));
-        Amount totalSavings = account.giveActualBalance();
-        Amount realAmount = new Amount(-(amount + otherAmount + thirdAmount));
+        UnsupportedOperationException exception = null;
+        try {
+            account.makeWithdrawal(new Amount(0.0));
+        } catch (UnsupportedOperationException e) {
+            exception = e;
+        }
+        assertThat(exception).isNotEqualTo(null);
+    }
+
+
+    @Property(trials = 25)
+    public void after_multiple_withdrawals_on_an_account_with_1000000_should_give_the_amount_1000000_minus_the_substraction_of_the_withdrawals(@InRange(minDouble = 0.1, maxDouble = 9999) double amount, @InRange(minDouble = 0.1, maxDouble = 9999) double otherAmount, @InRange(minDouble = 0.1, maxDouble = 9999) double thirdAmount) {
+        Account account = new Account();
+        account.makeDeposit(new Amount(1000000.0));
+        account.makeWithdrawal(new Amount(amount));
+        account.makeWithdrawal(new Amount(otherAmount));
+        account.makeWithdrawal(new Amount(thirdAmount));
+        Amount totalSavings = account.giveBalance();
+        Amount realAmount = new Amount(1000000.0 - amount - otherAmount - thirdAmount);
         assertThat(realAmount).isEqualTo(totalSavings);
     }
 
     @Property
-    public void after_multiple_withdrawals_and_deposit_on_an_empty_should_give_the_amount_of_the_sum_of_all(Double amount, Double otherAmount, Double thirdAmount) {
+    public void after_multiple_withdrawals_and_deposit_on_an_empty_should_give_the_amount_of_the_sum_of_all(@InRange(minDouble = 0.1, maxDouble = 9999) double amount, @InRange(minDouble = 0.1, maxDouble = 9999) double otherAmount, @InRange(minDouble = 0.1, maxDouble = 9999) double thirdAmount) {
         Account account = new Account();
+        account.makeDeposit(new Amount(1000000.0));
         account.makeDeposit(new Amount(amount));
-        account.withdrawal(new Amount(otherAmount));
+        account.makeWithdrawal(new Amount(otherAmount));
         account.makeDeposit(new Amount(thirdAmount));
-        Amount totalSavings = account.giveActualBalance();
-        Amount realAmount = new Amount(amount - otherAmount + thirdAmount);
+        Amount totalSavings = account.giveBalance();
+        Amount realAmount = new Amount(1000000.0 + amount - otherAmount + thirdAmount);
         assertThat(realAmount).isEqualTo(totalSavings);
     }
 
@@ -85,10 +115,12 @@ public class AccountTest {
     }
 
     @Property
-    public void after_making_a_withdrawal_on_an_empty_account_should_give_the_history_of_the_deposit(Double amount) {
+    public void after_making_a_withdrawal_on_an__account_should_give_the_history_of_the_deposit(Double amount) {
         Account account = new Account();
+        account.makeDeposit(new Amount(1000000.0));
         Amount newAmount = new Amount(amount);
-        account.withdrawal(newAmount);
+        Amount expectedAmount = new Amount(1000000.0 - amount);
+        account.makeWithdrawal(newAmount);
         List<HistoryLine> lines = account.showHistoryLines();
         LocalDate localDate = LocalDate.now();
         HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
@@ -97,7 +129,7 @@ public class AccountTest {
                 .setNewAmount(newAmount.negateAmount())
                 .setOperationType(OperationType.WITHDRAWAL)
                 .createHistoryLine();
-        HistoryLine realHistory = lines.get(0);
+        HistoryLine realHistory = lines.get(1);
         assertThat(historyLine).isEqualTo(realHistory);
     }
 

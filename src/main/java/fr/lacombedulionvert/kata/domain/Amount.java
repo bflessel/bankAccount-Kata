@@ -45,4 +45,8 @@ public class Amount {
     boolean isEqualZero() {
         return amount == 0;
     }
+
+    public Amount plus(Amount operationAmount) {
+        return new Amount(operationAmount.amount + amount);
+    }
 }

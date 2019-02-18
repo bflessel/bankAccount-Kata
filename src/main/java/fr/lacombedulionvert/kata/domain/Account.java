@@ -16,11 +16,11 @@ class Account {
         history.add(newAmount);
     }
 
-    Amount giveActualBalance() {
+    Amount giveBalance() {
         return history.giveActualBalance();
     }
 
-    void withdrawal(Amount amount) {
+    void makeWithdrawal(Amount amount) {
         makeDeposit(amount.negateAmount());
     }
 

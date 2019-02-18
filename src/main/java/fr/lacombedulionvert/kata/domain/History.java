@@ -1,6 +1,6 @@
 package fr.lacombedulionvert.kata.domain;
 
-import fr.lacombedulionvert.kata.domain.history.Histories;
+import fr.lacombedulionvert.kata.domain.history.HistorieLines;
 import fr.lacombedulionvert.kata.domain.history.HistoryLine;
 import fr.lacombedulionvert.kata.domain.history.HistoryLineBuilder;
 import fr.lacombedulionvert.kata.domain.history.OperationType;
@@ -9,25 +9,29 @@ import java.util.List;
 
 class History {
     private Amount amount;
-    private Histories histories;
+    private HistorieLines historieLines;
 
-    void add(Amount newAmount) {
-        this.amount.add(newAmount);
+    void add(Amount operationAmount) {
+
         OperationType operationType = OperationType.DEPOSIT;
-        if (newAmount.isNegative())
+        Amount newAmount = amount.plus(operationAmount);
+        if (operationAmount.isEqualZero() || newAmount.isNegative()) {
+            throw new UnsupportedOperationException();
+        }
+        if (operationAmount.isNegative()) {
             operationType = OperationType.WITHDRAWAL;
-        if (newAmount.isEqualZero())
-            operationType = OperationType.NAN;
+        }
         HistoryLine historyLine = new HistoryLineBuilder()
                 .setOperationType(operationType)
-                .setNewAmount(newAmount)
+                .setNewAmount(operationAmount)
                 .createActualHistoryLine();
-        histories.add(historyLine);
+        historieLines.add(historyLine);
+        this.amount.add(operationAmount);
     }
 
     History() {
         this.amount = new Amount();
-        this.histories = new Histories();
+        this.historieLines = new HistorieLines();
     }
 
     Amount giveActualBalance() {
@@ -35,11 +39,11 @@ class History {
     }
 
     List<HistoryLine> giveHistory() {
-        return histories.giveHistoryList();
+        return historieLines.giveHistoryList();
     }
 
     List<String> listHistory() {
-        return histories.showHistory();
+        return historieLines.showHistory();
 
     }
 }

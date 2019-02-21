@@ -1,49 +1,56 @@
 package fr.lacombedulionvert.kata.domain;
 
-import fr.lacombedulionvert.kata.domain.history.HistorieLines;
 import fr.lacombedulionvert.kata.domain.history.HistoryLine;
 import fr.lacombedulionvert.kata.domain.history.HistoryLineBuilder;
+import fr.lacombedulionvert.kata.domain.history.HistoryLines;
 import fr.lacombedulionvert.kata.domain.history.OperationType;
 
 import java.util.List;
 
 class History {
-    private Amount amount;
-    private HistorieLines historieLines;
-
-    void add(Amount operationAmount) {
-
-        OperationType operationType = OperationType.DEPOSIT;
-        Amount newAmount = amount.plus(operationAmount);
-        if (operationAmount.isEqualZero() || newAmount.isNegative()) {
-            throw new UnsupportedOperationException();
-        }
-        if (operationAmount.isNegative()) {
-            operationType = OperationType.WITHDRAWAL;
-        }
-        HistoryLine historyLine = new HistoryLineBuilder()
-                .setOperationType(operationType)
-                .setNewAmount(operationAmount)
-                .createActualHistoryLine();
-        historieLines.add(historyLine);
-        this.amount.add(operationAmount);
-    }
+    private final Amount amount;
+    private final HistoryLines historyLines;
 
     History() {
         this.amount = new Amount();
-        this.historieLines = new HistorieLines();
+        this.historyLines = new HistoryLines();
     }
 
-    Amount giveActualBalance() {
+    Amount giveBalance() {
         return amount;
     }
 
+    void makeDeposit(Amount operationAmount) {
+        OperationType operationType = OperationType.DEPOSIT;
+        generateHistoryLine(operationAmount, operationType);
+        amount.add(operationAmount);
+    }
+
+    void makeWithdrawal(Amount otherAmount) {
+        OperationType operationType = OperationType.WITHDRAWAL;
+        Amount newAmount = otherAmount.minus(amount);
+        if (newAmount.isNegative()) {
+            throw new UnsupportedOperationException();
+        }
+        generateHistoryLine(otherAmount, operationType);
+        this.amount.takeOff(otherAmount);
+
+    }
+
+    private void generateHistoryLine(Amount amount, OperationType operationType) {
+        HistoryLine historyLine = new HistoryLineBuilder()
+                .setOperationType(operationType)
+                .setNewAmount(amount)
+                .createActualHistoryLine();
+        historyLines.add(historyLine);
+    }
+
     List<HistoryLine> giveHistory() {
-        return historieLines.giveHistoryList();
+        return historyLines.giveHistoryList();
     }
 
     List<String> listHistory() {
-        return historieLines.showHistory();
+        return historyLines.showStatement();
 
     }
 }

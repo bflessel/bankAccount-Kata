@@ -3,6 +3,7 @@ package fr.lacombedulionvert.kata.domain;
 import fr.lacombedulionvert.kata.domain.dateManagement.*;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,11 +13,13 @@ public class AcceptanceTest {
     @Test
     public void after_multiples_deposits_and_withdrawals_should_see_the_history_of_all_operation() {
         Account account = new Account();
-        account.makeDeposit(new Amount(300.0));
-        account.makeWithdrawal(new Amount(200.0));
         StringPrinter printer = new StringPrinter();
+
+        account.makeDeposit(new Amount(BigDecimal.valueOf(300.0)));
+        account.makeWithdrawal(new Amount(BigDecimal.valueOf(200.0)));
         account.printHistory(printer);
         String history = printer.showOutPut();
+
         String expectedResumeOfOperations = createExpectedString();
         assertThat(expectedResumeOfOperations).isEqualTo(history);
     }

@@ -5,7 +5,6 @@ import fr.lacombedulionvert.kata.domain.dateManagement.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.concurrent.atomic.DoubleAdder;
 
 public class HistoryLine {
     private final HistoryDate date;
@@ -21,8 +20,7 @@ public class HistoryLine {
 
     HistoryLine(Amount newAmount, OperationType type) {
         LocalDate localDate = LocalDate.now();
-        HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
-        this.date = date;
+        this.date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
         this.newAmount = newAmount;
         this.type = type;
     }
@@ -52,21 +50,10 @@ public class HistoryLine {
     }
 
 
-    String generateHistory(DoubleAdder total) {
-        Amount amount = newAmount;
-        total.add(amount.getValue());
-        return new StringBuilder()
-                .append("\t ")
-                .append(date.giveDate())
-                .append("\t **** ")
-                .append(type)
-                .append("\t")
-                .append(amount.getValue())
-                .append("\t")
-                .append("\t **** ")
-                .append(total)
-                .append("\n")
-                .toString();
+    StatementLine generateStatementLine() {
+        return new StatementLine(newAmount, date, type);
+
     }
+
 }
 

@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.concurrent.atomic.DoubleAdder;
 import java.util.stream.Collectors;
 
-public class HistorieLines {
+public class HistoryLines {
     private final List<HistoryLine> historyLines;
 
 
-    public HistorieLines() {
+    public HistoryLines() {
         this.historyLines = new ArrayList<>();
     }
 
@@ -22,9 +22,12 @@ public class HistorieLines {
         return Collections.unmodifiableList(historyLines);
     }
 
-    public List<String> showHistory() {
+    public List<String> showStatement() {
         DoubleAdder total = new DoubleAdder();
-        return historyLines.stream().map(line -> line.generateHistory(total)).collect(Collectors.toList());
+        List<StatementLine> statementLines = historyLines.stream().map(HistoryLine::generateStatementLine).collect(Collectors.toList());
+        return statementLines.stream().map(line -> line.generateHistory(total)).collect(Collectors.toList());
 
     }
+
+
 }

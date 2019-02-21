@@ -13,15 +13,15 @@ class Account {
     }
 
     void makeDeposit(Amount newAmount) {
-        history.add(newAmount);
+        history.makeDeposit(newAmount);
     }
 
     Amount giveBalance() {
-        return history.giveActualBalance();
+        return history.giveBalance();
     }
 
     void makeWithdrawal(Amount amount) {
-        makeDeposit(amount.negateAmount());
+        history.makeWithdrawal(amount);
     }
 
     void printHistory(Printer printer) {

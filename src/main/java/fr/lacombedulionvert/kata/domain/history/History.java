@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.concurrent.atomic.DoubleAdder;
 import java.util.stream.Collectors;
 
-public class HistoryLines {
+public class History {
     private final List<HistoryLine> historyLines;
 
 
-    public HistoryLines() {
+    public History() {
         this.historyLines = new ArrayList<>();
     }
 

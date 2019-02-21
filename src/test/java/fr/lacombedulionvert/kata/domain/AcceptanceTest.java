@@ -1,6 +1,9 @@
 package fr.lacombedulionvert.kata.domain;
 
-import fr.lacombedulionvert.kata.domain.dateManagement.*;
+import fr.lacombedulionvert.kata.domain.dateManagement.Day;
+import fr.lacombedulionvert.kata.domain.dateManagement.HistoryDate;
+import fr.lacombedulionvert.kata.domain.dateManagement.Month;
+import fr.lacombedulionvert.kata.domain.dateManagement.Year;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -26,7 +29,7 @@ public class AcceptanceTest {
 
     private String createExpectedString() {
         LocalDate localDate = LocalDate.now();
-        HistoryDate date = new HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
+        HistoryDate date = new HistoryDate.HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
         return "\t " + date.giveDate() + "\t **** DEPOSIT\t300.0\t\t **** 300.0\n"
                 + "\t " + date.giveDate() + "\t **** WITHDRAWAL\t-200.0\t\t **** 100.0\n"
                 ;

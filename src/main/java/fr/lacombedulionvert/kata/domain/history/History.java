@@ -7,26 +7,24 @@ import java.util.concurrent.atomic.DoubleAdder;
 import java.util.stream.Collectors;
 
 public class History {
-    private final List<HistoryLine> historyLines;
-
+    private final List<Operation> operations;
 
     public History() {
-        this.historyLines = new ArrayList<>();
+        this.operations = new ArrayList<>();
     }
 
-    public void add(HistoryLine historyLine) {
-        historyLines.add(historyLine);
+    public void add(Operation operation) {
+        operations.add(operation);
     }
 
-    public List<HistoryLine> giveHistoryList() {
-        return Collections.unmodifiableList(historyLines);
+    public List<Operation> giveOperations() {
+        return Collections.unmodifiableList(operations);
     }
 
     public List<String> showStatement() {
         DoubleAdder total = new DoubleAdder();
-        List<StatementLine> statementLines = historyLines.stream().map(HistoryLine::generateStatementLine).collect(Collectors.toList());
+        List<StatementLine> statementLines = operations.stream().map(Operation::generateStatementLine).collect(Collectors.toList());
         return statementLines.stream().map(line -> line.generateHistory(total)).collect(Collectors.toList());
-
     }
 
 

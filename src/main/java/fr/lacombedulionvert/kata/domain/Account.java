@@ -1,7 +1,7 @@
 package fr.lacombedulionvert.kata.domain;
 
 import fr.lacombedulionvert.kata.domain.history.History;
-import fr.lacombedulionvert.kata.domain.history.HistoryLine;
+import fr.lacombedulionvert.kata.domain.history.Operation;
 import fr.lacombedulionvert.kata.domain.history.OperationType;
 import fr.lacombedulionvert.kata.domain.history.Printer;
 
@@ -22,7 +22,7 @@ class Account {
 
     void makeDeposit(Amount operationAmount) {
         OperationType operationType = OperationType.DEPOSIT;
-        generateHistoryLine(operationAmount, operationType);
+        generateOperation(operationAmount, operationType);
         amount.add(operationAmount);
     }
 
@@ -32,7 +32,7 @@ class Account {
         if (newAmount.isNegative()) {
             throw new UnsupportedOperationException();
         }
-        generateHistoryLine(otherAmount, operationType);
+        generateOperation(otherAmount, operationType);
         this.amount.takeOff(otherAmount);
     }
 
@@ -40,15 +40,15 @@ class Account {
         printer.printHistory(history.showStatement());
     }
 
-    List<HistoryLine> showHistoryLines() {
-        return history.giveHistoryList();
+    List<Operation> showOperations() {
+        return history.giveOperations();
     }
 
-    private void generateHistoryLine(Amount amount, OperationType operationType) {
-        HistoryLine historyLine = new HistoryLine.HistoryLineBuilder()
+    private void generateOperation(Amount amount, OperationType operationType) {
+        Operation operation = new Operation.OperationBuilder()
                 .setOperationType(operationType)
                 .setNewAmount(amount)
                 .build();
-        history.add(historyLine);
+        history.add(operation);
     }
 }

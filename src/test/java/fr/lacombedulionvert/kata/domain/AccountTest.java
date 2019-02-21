@@ -7,7 +7,7 @@ import fr.lacombedulionvert.kata.domain.dateManagement.Day;
 import fr.lacombedulionvert.kata.domain.dateManagement.HistoryDate;
 import fr.lacombedulionvert.kata.domain.dateManagement.Month;
 import fr.lacombedulionvert.kata.domain.dateManagement.Year;
-import fr.lacombedulionvert.kata.domain.history.HistoryLine;
+import fr.lacombedulionvert.kata.domain.history.Operation;
 import fr.lacombedulionvert.kata.domain.history.OperationType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -128,18 +128,18 @@ public class AccountTest {
         Amount newAmount = new Amount(BigDecimal.valueOf(amount));
 
         account.makeDeposit(newAmount);
-        List<HistoryLine> lines = account.showHistoryLines();
+        List<Operation> lines = account.showOperations();
 
         LocalDate localDate = LocalDate.now();
         HistoryDate date = new HistoryDate.HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
-        HistoryLine historyLine = new HistoryLine.HistoryLineBuilder()
+        Operation operation = new Operation.OperationBuilder()
                 .setDate(date)
                 .setNewAmount(newAmount)
                 .setOperationType(OperationType.DEPOSIT)
                 .createHistoryLine();
-        HistoryLine realHistory = lines.get(0);
+        Operation realHistory = lines.get(0);
 
-        assertThat(historyLine).isEqualTo(realHistory);
+        assertThat(operation).isEqualTo(realHistory);
     }
 
     @Property
@@ -150,17 +150,17 @@ public class AccountTest {
 
         account.makeDeposit(initialDeposit);
         account.makeWithdrawal(newAmount);
-        List<HistoryLine> lines = account.showHistoryLines();
+        List<Operation> lines = account.showOperations();
 
         LocalDate localDate = LocalDate.now();
         HistoryDate date = new HistoryDate.HistoryDateBuilder().setDay(new Day(localDate.getDayOfMonth())).setMonth(new Month(localDate.getMonthValue())).setYear(new Year(localDate.getYear())).createHistoryDate();
-        HistoryLine historyLine = new HistoryLine.HistoryLineBuilder()
+        Operation operation = new Operation.OperationBuilder()
                 .setDate(date)
                 .setNewAmount(newAmount)
                 .setOperationType(OperationType.WITHDRAWAL)
                 .createHistoryLine();
-        HistoryLine realHistory = lines.get(1);
-        assertThat(historyLine).isEqualTo(realHistory);
+        Operation realHistory = lines.get(1);
+        assertThat(operation).isEqualTo(realHistory);
     }
 
     @Test

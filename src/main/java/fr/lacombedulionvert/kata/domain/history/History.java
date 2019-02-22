@@ -26,6 +26,4 @@ public class History {
         List<StatementLine> statementLines = operations.stream().map(Operation::generateStatementLine).collect(Collectors.toList());
         return statementLines.stream().map(line -> line.generateHistory(total)).collect(Collectors.toList());
     }
-
-
 }

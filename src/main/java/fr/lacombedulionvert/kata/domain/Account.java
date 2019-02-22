@@ -1,5 +1,6 @@
 package fr.lacombedulionvert.kata.domain;
 
+import fr.lacombedulionvert.kata.domain.exceptions.NotEnoughFoundsException;
 import fr.lacombedulionvert.kata.domain.history.History;
 import fr.lacombedulionvert.kata.domain.history.Operation;
 import fr.lacombedulionvert.kata.domain.history.OperationType;
@@ -8,15 +9,15 @@ import fr.lacombedulionvert.kata.domain.history.Printer;
 import java.util.List;
 
 class Account {
-    private final Amount amount;
+    private final Balance amount;
     private final History history;
 
     Account() {
-        this.amount = new Amount();
+        this.amount = new Balance();
         this.history = new History();
     }
 
-    Amount giveBalance() {
+    Balance giveBalance() {
         return amount;
     }
 
@@ -28,12 +29,11 @@ class Account {
 
     void makeWithdrawal(Amount otherAmount) {
         OperationType operationType = OperationType.WITHDRAWAL;
-        Amount newAmount = otherAmount.minus(amount);
-        if (newAmount.isNegative()) {
-            throw new UnsupportedOperationException();
+        if (amount.isPossible(otherAmount)) {
+            throw new NotEnoughFoundsException();
         }
         generateOperation(otherAmount, operationType);
-        this.amount.takeOff(otherAmount);
+        amount.takeOff(otherAmount);
     }
 
     void printHistory(Printer printer) {

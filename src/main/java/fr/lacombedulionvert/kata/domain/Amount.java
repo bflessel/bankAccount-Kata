@@ -1,5 +1,7 @@
 package fr.lacombedulionvert.kata.domain;
 
+import fr.lacombedulionvert.kata.domain.exceptions.NegativeOrNullAmountException;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -7,28 +9,11 @@ import java.util.Objects;
 public class Amount {
     private BigDecimal amount;
 
-    Amount() {
-        amount = BigDecimal.valueOf(0);
-    }
-
     Amount(BigDecimal amount) {
         if (amount.doubleValue() <= 0) {
-            throw new UnsupportedOperationException();
+            throw new NegativeOrNullAmountException();
         }
         this.amount = amount.setScale(2, RoundingMode.HALF_DOWN);
-    }
-
-    void add(Amount newAmount) {
-        amount = amount.add(newAmount.amount);
-    }
-
-    void takeOff(Amount newAmount) {
-        amount = amount.subtract(newAmount.amount);
-    }
-
-
-    boolean isNegative() {
-        return amount.intValue() < 0;
     }
 
     public BigDecimal getValue() {

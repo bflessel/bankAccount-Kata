@@ -32,13 +32,11 @@ public class AmountTest {
         Assertions.assertThat(subAmount).isEqualTo(expectedAmount);
     }
 
-
     @Property
     public void should_give_the_addition_of_amounts(@InRange(minInt = 1, maxInt = Integer.MAX_VALUE / 2) Integer amount, @InRange(minInt = 1, maxInt = (Integer.MAX_VALUE - 1) / 2) Integer otherAmount) {
         Amount addAmount = new Amount(BigDecimal.valueOf(otherAmount)).plus(new Amount(BigDecimal.valueOf(amount)));
         Amount expectedAmount = new Amount(BigDecimal.valueOf(amount + otherAmount));
         Assertions.assertThat(addAmount).isEqualTo(expectedAmount);
     }
-
 
 }

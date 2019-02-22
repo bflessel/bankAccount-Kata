@@ -34,7 +34,7 @@ public class AccountTest {
     }
 
     @Property
-    public void after_making_a_deposit_on_an_empty_account_should_give_the_amount_of_the_deposit(@InRange(minDouble = 0.1, maxDouble = 10000000000000.0) double amount) {
+    public void should_give_the_amount_of_the_initial_deposit(@InRange(minDouble = 0.1, maxDouble = 10000000000000.0) double amount) {
         Amount newAmount = new Amount(BigDecimal.valueOf(amount));
 
         account.makeDeposit(newAmount);
@@ -46,7 +46,7 @@ public class AccountTest {
     }
 
     @Property
-    public void after_multiple_deposits_on_an_empty_should_give_the_amount_of_the_sum_of_the_deposits(@InRange(minDouble = 1) double amount, @InRange(minDouble = 1) double otherAmount, @InRange(minDouble = 1) double thirdAmount) {
+    public void after_multiple_deposits_should_give_the_amount_of_the_sum_of_the_deposits(@InRange(minDouble = 1) double amount, @InRange(minDouble = 1) double otherAmount, @InRange(minDouble = 1) double thirdAmount) {
         account.makeDeposit(new Amount(BigDecimal.valueOf(amount)));
         account.makeDeposit(new Amount(BigDecimal.valueOf(otherAmount)));
         account.makeDeposit(new Amount(BigDecimal.valueOf(thirdAmount)));
@@ -58,29 +58,14 @@ public class AccountTest {
     }
 
     @Property
-    public void after_making_a_withdrawal_on_account_with_10000_should_return_the_sub_of_10000(@InRange(minDouble = 1, maxDouble = 999) double amount) {
-        Amount realAmount = new Amount(BigDecimal.valueOf(amount));
-
-        account.makeDeposit(initialDeposit);
-        account.makeWithdrawal(realAmount);
-        Balance totalSavings = account.giveBalance();
-
-        Balance expectedResult = new Balance();
-        expectedResult.add(realAmount.minus(initialDeposit));
-        assertThat(totalSavings).isEqualTo(expectedResult);
-    }
-
-
-    @Property
     public void after_making_a_withdrawal_on_empty_account_should_throw_an_exception(@InRange(minDouble = 1) double amount) {
         Assertions.assertThatThrownBy(() -> account.makeWithdrawal(new Amount(BigDecimal.valueOf(amount))))
                 .isInstanceOf(NotEnoughFoundsException.class);
     }
 
 
-
     @Property(trials = 25)
-    public void after_multiple_withdrawals_on_an_account_with_1000000_should_give_the_amount_1000000_minus_the_substraction_of_the_withdrawals(@InRange(minDouble = 1, maxDouble = 9999) double amount, @InRange(minDouble = 1, maxDouble = 9999) double otherAmount, @InRange(minDouble = 1, maxDouble = 9999) double thirdAmount) {
+    public void after_multiple_withdrawals_on_an_account_should_give_the_amount_minus_the_substraction_of_the_withdrawals(@InRange(minDouble = 1, maxDouble = 9999) double amount, @InRange(minDouble = 1, maxDouble = 9999) double otherAmount, @InRange(minDouble = 1, maxDouble = 9999) double thirdAmount) {
         Amount firstOperation = new Amount(BigDecimal.valueOf(amount));
         Amount secondOperation = new Amount(BigDecimal.valueOf(otherAmount));
         Amount thirdOperation = new Amount(BigDecimal.valueOf(thirdAmount));
@@ -98,7 +83,7 @@ public class AccountTest {
     }
 
     @Property
-    public void after_multiple_withdrawals_and_deposit_on_an_empty_should_give_the_amount_of_the_sum_of_all(@InRange(minDouble = 1, maxDouble = 9999) double amount, @InRange(minDouble = 1, maxDouble = 9999) double otherAmount, @InRange(minDouble = 1, maxDouble = 9999) double thirdAmount) {
+    public void after_multiple_withdrawals_and_deposit_should_give_the_amount_of_the_sum_of_all(@InRange(minDouble = 1, maxDouble = 9999) double amount, @InRange(minDouble = 1, maxDouble = 9999) double otherAmount, @InRange(minDouble = 1, maxDouble = 9999) double thirdAmount) {
         Amount firstOperation = new Amount(BigDecimal.valueOf(amount));
         Amount secondOperation = new Amount(BigDecimal.valueOf(otherAmount));
         Amount thirdOperation = new Amount(BigDecimal.valueOf(thirdAmount));
@@ -135,7 +120,7 @@ public class AccountTest {
     }
 
     @Property
-    public void after_making_a_withdrawal_on_an__account_should_give_the_history_of_the_deposit(@InRange(minDouble = 1) double amount) {
+    public void should_give_the_history_of_a_withdrawal(@InRange(minDouble = 1) double amount) {
         Amount newAmount = new Amount(BigDecimal.valueOf(amount));
 
         account.makeDeposit(initialDeposit);
@@ -154,7 +139,7 @@ public class AccountTest {
     }
 
     @Test
-    public void given_a_deposit_should_print_a_line() {
+    public void given_a_deposit_should_print_a_deposit() {
         account.makeDeposit(new Amount(BigDecimal.valueOf(300.0)));
         StringPrinter printer = new StringPrinter();
 

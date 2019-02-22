@@ -16,10 +16,6 @@ class Balance {
         amount = amount.add(operationAmount.getValue());
     }
 
-    public BigDecimal getValue() {
-        return amount;
-    }
-
     void takeOff(Amount otherAmount) {
         amount = amount.subtract(otherAmount.getValue());
     }

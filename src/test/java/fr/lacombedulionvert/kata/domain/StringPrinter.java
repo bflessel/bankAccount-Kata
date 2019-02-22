@@ -17,8 +17,6 @@ public class StringPrinter implements Printer {
 
     @Override
     public void printHistory(List<String> history) {
-        for (String line : history) {
-            builder.append(line);
-        }
+        history.forEach(line -> builder.append(line));
     }
 }
